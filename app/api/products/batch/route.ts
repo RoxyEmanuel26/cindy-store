@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { captureError } from '@/lib/sentry-helpers'
 
 export async function POST(request: NextRequest) {
     try {
@@ -15,7 +16,8 @@ export async function POST(request: NextRequest) {
         })
 
         return NextResponse.json(products)
-    } catch {
+    } catch (error) {
+        captureError(error, { endpoint: '/api/products/batch' })
         return NextResponse.json([], { status: 500 })
     }
 }

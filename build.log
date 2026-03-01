@@ -1,0 +1,115 @@
+
+> cindy-store@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local, .env
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.9s
+  Running TypeScript ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/28) ...
+  Generating static pages using 11 workers (7/28) 
+  Generating static pages using 11 workers (14/28) 
+prisma:error 
+Invalid `prisma.product.count()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.category.count()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.product.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.analytics.groupBy()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.product.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+  Generating static pages using 11 workers (21/28) 
+prisma:error 
+Invalid `prisma.siteSettings.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.siteSettings.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.siteSettings.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.siteSettings.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.siteSettings.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.siteSettings.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.product.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.product.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.category.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.product.count()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.siteSettings.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+prisma:error 
+Invalid `prisma.siteSettings.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+Error occurred prerendering page "/wishlist". Read more: https://nextjs.org/docs/messages/prerender-error
+Error [PrismaClientInitializationError]: 
+Invalid `prisma.siteSettings.findMany()` invocation:
+
+
+The provided database string is invalid. Error parsing connection string: invalid port number in database URL. Please refer to the documentation in https://www.prisma.io/docs/reference/database-reference/connection-urls for constructing a correct connection string. In some cases, certain characters must be escaped. Please check the string for any illegal characters.
+    at async c (E:\00 projek rumah\antigravity\cindy-store\.next\server\chunks\ssr\[root-of-the-server]__2546b5a4._.js:1:85)
+    at async p (E:\00 projek rumah\antigravity\cindy-store\.next\server\chunks\ssr\[root-of-the-server]__2546b5a4._.js:3:11047) {
+  clientVersion: '5.22.0',
+  errorCode: undefined,
+  digest: '576954828'
+}
+Export encountered an error on /(public)/wishlist/page: /wishlist, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null

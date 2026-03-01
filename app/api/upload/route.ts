@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { uploadImage } from '@/lib/cloudinary'
+import { captureError } from '@/lib/sentry-helpers'
 
 export async function POST(request: NextRequest) {
     const session = await auth()
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({ url, publicId }, { status: 200 })
     } catch (error) {
-        console.error('Upload error:', error)
+        captureError(error, { endpoint: '/api/upload' })
         return NextResponse.json(
             { error: 'Gagal mengupload gambar' },
             { status: 500 }

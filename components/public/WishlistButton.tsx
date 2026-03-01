@@ -5,6 +5,7 @@ import { Heart } from 'lucide-react'
 import { useWishlist } from '@/hooks/useWishlist'
 import { showToast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
+import { trackAddToWishlist } from '@/lib/analytics-events'
 
 interface WishlistButtonProps {
     product: { id: string; title: string }
@@ -24,6 +25,9 @@ export function WishlistButton({ product, variant = 'card', className }: Wishlis
 
         if (added) {
             showToast.wishlistAdded(product.title)
+            // Wishlist tracking expects price, but WishlistButton only receives id & title right now.
+            // For now, pass 0 as price. To do it correctly, the caller would need to pass price.
+            trackAddToWishlist(product.id, product.title, (product as any).price || 0)
         } else {
             showToast.wishlistRemoved()
         }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { captureError } from '@/lib/sentry-helpers'
 
 export async function POST(
     request: NextRequest,
@@ -12,7 +13,8 @@ export async function POST(
             data: { viewCount: { increment: 1 } },
         })
         return NextResponse.json({ success: true })
-    } catch {
+    } catch (error) {
+        captureError(error, { endpoint: '/api/products/[id]/view' })
         return NextResponse.json({ success: false })
     }
 }

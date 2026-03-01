@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
+import { trackPWAInstall } from '@/lib/analytics-events'
 
 interface BeforeInstallPromptEvent extends Event {
     prompt: () => Promise<void>
@@ -34,7 +35,10 @@ export function InstallPWA() {
         if (!deferredPrompt) return
         deferredPrompt.prompt()
         const { outcome } = await deferredPrompt.userChoice
-        if (outcome === 'accepted') setShowBanner(false)
+        if (outcome === 'accepted') {
+            setShowBanner(false)
+            trackPWAInstall()
+        }
         setDeferredPrompt(null)
     }
 

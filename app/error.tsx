@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import * as Sentry from '@sentry/nextjs'
 import { Button } from '@/components/ui/button'
 import { Home, RefreshCw } from 'lucide-react'
 
@@ -14,6 +15,7 @@ export default function Error({
 }) {
     useEffect(() => {
         console.error(error)
+        Sentry.captureException(error)
     }, [error])
 
     return (

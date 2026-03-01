@@ -10,6 +10,11 @@ import { WishlistButton } from './WishlistButton'
 import { ShareButton } from './ShareButton'
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed'
 import type { ProductType } from '@/types'
+import {
+    trackProductView,
+    trackShopeeClick,
+    trackTokopediaClick
+} from '@/lib/analytics-events'
 
 const badgeColors: Record<string, string> = {
     NEW: 'bg-blue-500 text-white',
@@ -27,32 +32,22 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     // Track view + add to recently viewed
     useEffect(() => {
         addProduct(product.id)
-
-        fetch('/api/analytics/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ eventType: 'view', productId: product.id }),
-        }).catch(() => { })
-
-        fetch(`/api/products/${product.id}/view`, { method: 'POST' }).catch(() => { })
+        trackProductView(
+            product.id,
+            product.title,
+            product.category?.name || 'Uncategorized',
+            product.price
+        )
     }, [product.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleShopeeClick = () => {
         window.open(product.shopeeUrl, '_blank')
-        fetch('/api/analytics/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ eventType: 'shopee_click', productId: product.id }),
-        }).catch(() => { })
+        trackShopeeClick(product.id, product.title, product.price)
     }
 
     const handleTokopediaClick = () => {
         window.open(product.tokopediaUrl, '_blank')
-        fetch('/api/analytics/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ eventType: 'tokopedia_click', productId: product.id }),
-        }).catch(() => { })
+        trackTokopediaClick(product.id, product.title, product.price)
     }
 
     return (

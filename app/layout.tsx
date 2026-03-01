@@ -50,6 +50,9 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
 }
 
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
+import { MicrosoftClarity } from '@/components/analytics/MicrosoftClarity'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -58,6 +61,8 @@ export default function RootLayout({
   return (
     <html lang="id" className={poppins.variable} suppressHydrationWarning>
       <body className="font-sans bg-brand-bg dark:bg-dark-bg text-brand-text dark:text-dark-text antialiased">
+        <GoogleAnalytics />
+        <MicrosoftClarity />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

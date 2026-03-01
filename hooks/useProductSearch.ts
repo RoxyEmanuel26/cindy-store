@@ -3,6 +3,7 @@
 import Fuse from 'fuse.js'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { trackSearch } from '@/lib/analytics-events'
 
 const FUSE_OPTIONS = {
     keys: [
@@ -59,9 +60,10 @@ export function useProductSearch() {
     const handleSubmit = useCallback(() => {
         if (query.length > 0) {
             setIsOpen(false)
+            trackSearch(query, results.length)
             router.push(`/products?q=${encodeURIComponent(query)}`)
         }
-    }, [query, router])
+    }, [query, results.length, router])
 
     return {
         query,

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { trackWhatsAppClick } from '@/lib/analytics-events'
 
 interface FloatingWhatsAppProps {
     waNumber: string
@@ -21,11 +22,7 @@ export function FloatingWhatsApp({ waNumber }: FloatingWhatsAppProps) {
         )
         window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank')
 
-        fetch('/api/analytics/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ eventType: 'wa_click' }),
-        }).catch(() => { })
+        trackWhatsAppClick('floating')
     }
 
     if (!visible) return null
