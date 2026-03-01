@@ -1,0 +1,19 @@
+app/(admin)/admin/settings/page.tsx(31,9): error TS2322: Type 'Resolver<{ tagline?: string | undefined; logo_url?: string | undefined; hero_title?: string | undefined; hero_subtitle?: string | undefined; hero_image?: string | undefined; about_text?: string | undefined; wa_number?: string | undefined; }, any, { ...; }>' is not assignable to type 'Resolver<{ tagline: string; hero_title: string; hero_subtitle: string; about_text: string; logo_url?: string | undefined; hero_image?: string | undefined; wa_number?: string | undefined; }, any, { ...; }>'.
+  Types of parameters 'options' and 'options' are incompatible.
+    Type 'ResolverOptions<{ tagline: string; hero_title: string; hero_subtitle: string; about_text: string; logo_url?: string | undefined; hero_image?: string | undefined; wa_number?: string | undefined; }>' is not assignable to type 'ResolverOptions<{ tagline?: string | undefined; logo_url?: string | undefined; hero_title?: string | undefined; hero_subtitle?: string | undefined; hero_image?: string | undefined; about_text?: string | undefined; wa_number?: string | undefined; }>'.
+      Type 'string | undefined' is not assignable to type 'string'.
+        Type 'undefined' is not assignable to type 'string'.
+app/(admin)/admin/settings/page.tsx(123,43): error TS2345: Argument of type '(data: SettingsValues) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ tagline: string; hero_title: string; hero_subtitle: string; about_text: string; logo_url?: string | undefined; hero_image?: string | undefined; wa_number?: string | undefined; }'.
+      Type 'FieldValues' is missing the following properties from type '{ tagline: string; hero_title: string; hero_subtitle: string; about_text: string; logo_url?: string | undefined; hero_image?: string | undefined; wa_number?: string | undefined; }': tagline, hero_title, hero_subtitle, about_text
+app/(admin)/admin/settings/page.tsx(154,46): error TS2345: Argument of type '(data: SettingsValues) => Promise<void>' is not assignable to parameter of type 'SubmitHandler<TFieldValues>'.
+  Types of parameters 'data' and 'data' are incompatible.
+    Type 'TFieldValues' is not assignable to type '{ tagline: string; hero_title: string; hero_subtitle: string; about_text: string; logo_url?: string | undefined; hero_image?: string | undefined; wa_number?: string | undefined; }'.
+      Type 'FieldValues' is missing the following properties from type '{ tagline: string; hero_title: string; hero_subtitle: string; about_text: string; logo_url?: string | undefined; hero_image?: string | undefined; wa_number?: string | undefined; }': tagline, hero_title, hero_subtitle, about_text
+lib/api-helpers.ts(11,37): error TS2339: Property 'errors' does not exist on type 'ZodError<T>'.
+lib/api-helpers.ts(11,49): error TS7006: Parameter 'e' implicitly has an 'any' type.
+lib/metadata.ts(30,9): error TS2322: Type '{ title: string; description: string; url: string; siteName: string; images: { url: string; width: number; height: number; alt: string; }[]; locale: string; type: "website" | "article" | "product"; }' is not assignable to type 'OpenGraph | null | undefined'.
+  Types of property 'type' are incompatible.
+    Type '"website" | "article" | "product"' is not assignable to type '"website" | "article" | undefined'.
+      Type '"product"' is not assignable to type '"website" | "article" | undefined'.

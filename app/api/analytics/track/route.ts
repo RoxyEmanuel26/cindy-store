@@ -1,5 +1,40 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
-export async function POST() {
-    return NextResponse.json({ message: 'Analytics tracking endpoint' })
+export async function POST(request: NextRequest) {
+    try {
+        const body = await request.json()
+        const { eventType, productId } = body
+
+        const validEvents = ['view', 'shopee_click', 'tokopedia_click', 'wa_click']
+        if (!validEvents.includes(eventType)) {
+            return NextResponse.json({ error: 'Invalid event type' }, { status: 400 })
+        }
+
+        await prisma.analytics.create({
+            data: {
+                eventType,
+                productId: productId || null,
+                userAgent: request.headers.get('user-agent'),
+            },
+        })
+
+        if (eventType === 'shopee_click' && productId) {
+            await prisma.product.update({
+                where: { id: productId },
+                data: { shopeeClicks: { increment: 1 } },
+            })
+        }
+        if (eventType === 'tokopedia_click' && productId) {
+            await prisma.product.update({
+                where: { id: productId },
+                data: { tokopediaClicks: { increment: 1 } },
+            })
+        }
+
+        return NextResponse.json({ success: true })
+    } catch (error) {
+        console.error('Analytics track error:', error)
+        return NextResponse.json({ success: false })
+    }
 }

@@ -60,16 +60,36 @@
 
   * {
     @apply border-brand-border dark:border-dark-border;
+    transition-property: background-color, border-color, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
   }
 
   body {
-    @apply bg-brand-bg dark:bg-dark-bg text-brand-text dark:text-dark-text transition-colors duration-300;
+    @apply bg-brand-bg dark:bg-dark-bg text-brand-text dark:text-dark-text;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Exclude elements that have their own animations */
+  button,
+  a,
+  [data-motion],
+  .transition-none {
+    transition-property: none;
+  }
+
+  /* Re-enable bg/color transitions on buttons for dark mode */
+  button,
+  a {
+    transition-property: background-color, border-color, color, opacity;
+    transition-duration: 150ms;
+    transition-timing-function: ease;
   }
 
   /* Scrollbar styling */
   ::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -88,5 +108,27 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .scrollbar-thumb-brand-secondary::-webkit-scrollbar-thumb {
+    @apply bg-brand-secondary rounded-full;
+  }
+}
+
+/* react-medium-image-zoom overrides */
+[data-rmiz-modal-overlay="visible"] {
+  background-color: rgba(28, 13, 24, 0.85) !important;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

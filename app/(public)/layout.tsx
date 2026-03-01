@@ -1,13 +1,26 @@
-export default function PublicLayout({
+import { Header } from '@/components/public/Header'
+import { Footer } from '@/components/public/Footer'
+import { FloatingWhatsApp } from '@/components/public/FloatingWhatsApp'
+import { PageTransition } from '@/components/animations/PageTransition'
+import { InstallPWA } from '@/components/public/InstallPWA'
+import { getSiteSettings } from '@/lib/site-settings'
+
+export default async function PublicLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const settings = await getSiteSettings()
+
     return (
-        <>
-            {/* Header will be added here */}
-            <main className="min-h-screen">{children}</main>
-            {/* Footer will be added here */}
-        </>
+        <div className="min-h-screen flex flex-col bg-brand-bg dark:bg-dark-bg">
+            <Header settings={settings} />
+            <main className="flex-1">
+                <PageTransition>{children}</PageTransition>
+            </main>
+            <Footer settings={settings} />
+            <FloatingWhatsApp waNumber={settings.wa_number} />
+            <InstallPWA />
+        </div>
     )
 }

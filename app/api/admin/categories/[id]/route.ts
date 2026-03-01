@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { CategorySchema } from '@/lib/validations'
+import { validateOrigin } from '@/lib/csrf'
+import { parseAndValidate } from '@/lib/api-helpers'
+import { sanitizeText } from '@/lib/sanitize'
 import slugify from 'slugify'
 
 export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!validateOrigin(request)) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const session = await auth()
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -15,19 +22,15 @@ export async function PUT(
 
     const { id } = await params
     const body = await request.json()
-    const validated = CategorySchema.safeParse(body)
+    const validation = await parseAndValidate(CategorySchema, body)
 
-    if (!validated.success) {
-        return NextResponse.json(
-            { error: validated.error.issues[0].message },
-            { status: 400 }
-        )
+    if (!validation.success) {
+        return validation.response
     }
 
-    const { name } = validated.data
+    const name = sanitizeText(validation.data.name)
     const slug = slugify(name, { lower: true, locale: 'id', strict: true })
 
-    // Cek duplikat (kecuali diri sendiri)
     const existing = await prisma.category.findFirst({
         where: {
             OR: [{ name }, { slug }],
@@ -51,9 +54,13 @@ export async function PUT(
 }
 
 export async function DELETE(
-    _request: NextRequest,
+    request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!validateOrigin(request)) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const session = await auth()
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -61,7 +68,6 @@ export async function DELETE(
 
     const { id } = await params
 
-    // Cek apakah kategori masih punya produk
     const productCount = await prisma.product.count({
         where: { categoryId: id },
     })

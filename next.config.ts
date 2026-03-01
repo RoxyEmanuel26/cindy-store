@@ -1,39 +1,112 @@
 import type { NextConfig } from 'next'
+import withPWAInit from 'next-pwa'
+
+const withPWA = withPWAInit({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development',
+  buildExcludes: [/middleware-manifest\.json$/],
+  runtimeCaching: [
+    {
+      urlPattern: /^https:\/\/fonts\.googleapis\.com/,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'google-fonts-stylesheets',
+        expiration: { maxEntries: 10, maxAgeSeconds: 31536000 },
+      },
+    },
+    {
+      urlPattern: /^https:\/\/fonts\.gstatic\.com/,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'google-fonts-webfonts',
+        cacheableResponse: { statuses: [0, 200] },
+        expiration: { maxEntries: 30, maxAgeSeconds: 31536000 },
+      },
+    },
+    {
+      urlPattern: /^https:\/\/res\.cloudinary\.com/,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'cloudinary-images',
+        cacheableResponse: { statuses: [0, 200] },
+        expiration: { maxEntries: 100, maxAgeSeconds: 2592000 },
+      },
+    },
+    {
+      urlPattern: /^https?.+\/api\/products/,
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'products-api',
+        expiration: { maxEntries: 50, maxAgeSeconds: 300 },
+        networkTimeoutSeconds: 10,
+      },
+    },
+    {
+      urlPattern: ({ request }: any) => request.mode === 'navigate',
+      handler: 'NetworkFirst',
+      options: {
+        cacheName: 'pages',
+        expiration: { maxEntries: 50, maxAgeSeconds: 3600 },
+        networkTimeoutSeconds: 5,
+      },
+    },
+  ],
+})
+
+const securityHeaders = [
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=()',
+  },
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=63072000; includeSubDomains; preload',
+  },
+  { key: 'X-DNS-Prefetch-Control', value: 'on' },
+  {
+    key: 'Content-Security-Policy',
+    value: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.clarity.ms",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "font-src 'self' https://fonts.gstatic.com data:",
+      "img-src 'self' https://res.cloudinary.com data: blob:",
+      "connect-src 'self' https://www.google-analytics.com https://www.clarity.ms https://vitals.vercel-insights.com",
+      "frame-src 'none'",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+    ].join('; '),
+  },
+]
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
-      },
+      { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
   },
   async headers() {
     return [
       {
         source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-        ],
+        headers: securityHeaders,
+      },
+      {
+        source: '/icons/(.*)',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+      {
+        source: '/fonts/(.*)',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
     ]
   },
 }
 
-export default nextConfig
+export default withPWA(nextConfig)

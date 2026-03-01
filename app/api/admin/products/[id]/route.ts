@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { ProductSchema } from '@/lib/validations'
+import { validateOrigin } from '@/lib/csrf'
+import { parseAndValidate } from '@/lib/api-helpers'
+import { sanitizeText, sanitizeDescription, sanitizeUrl } from '@/lib/sanitize'
 import slugify from 'slugify'
 
 export async function GET(
@@ -31,6 +34,10 @@ export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!validateOrigin(request)) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const session = await auth()
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -39,7 +46,6 @@ export async function PUT(
     const { id } = await params
     const body = await request.json()
 
-    // Jika hanya toggle isActive
     if (Object.keys(body).length === 1 && 'isActive' in body) {
         const product = await prisma.product.update({
             where: { id },
@@ -48,21 +54,17 @@ export async function PUT(
         return NextResponse.json(product)
     }
 
-    const validated = ProductSchema.safeParse(body)
+    const validation = await parseAndValidate(ProductSchema, body)
 
-    if (!validated.success) {
-        return NextResponse.json(
-            { error: validated.error.issues[0].message },
-            { status: 400 }
-        )
+    if (!validation.success) {
+        return validation.response
     }
 
-    const data = validated.data
+    const data = validation.data
 
-    // Generate slug dari title
-    let slug = slugify(data.title, { lower: true, locale: 'id', strict: true })
+    const title = sanitizeText(data.title)
+    let slug = slugify(title, { lower: true, locale: 'id', strict: true })
 
-    // Pastikan slug unik (kecuali diri sendiri)
     const existingSlug = await prisma.product.findFirst({
         where: { slug, NOT: { id } },
     })
@@ -73,14 +75,14 @@ export async function PUT(
     const product = await prisma.product.update({
         where: { id },
         data: {
-            title: data.title,
+            title,
             slug,
-            description: data.description,
+            description: sanitizeDescription(data.description),
             price: data.price,
-            image: data.image,
-            images: data.images || [],
-            shopeeUrl: data.shopeeUrl,
-            tokopediaUrl: data.tokopediaUrl,
+            image: sanitizeUrl(data.image) || data.image,
+            images: data.images?.map(img => sanitizeUrl(img) || img) || [],
+            shopeeUrl: sanitizeUrl(data.shopeeUrl) || data.shopeeUrl,
+            tokopediaUrl: sanitizeUrl(data.tokopediaUrl) || data.tokopediaUrl,
             categoryId: data.categoryId,
             badge: data.badge || null,
             isActive: data.isActive ?? true,
@@ -92,9 +94,13 @@ export async function PUT(
 }
 
 export async function DELETE(
-    _request: NextRequest,
+    request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
+    if (!validateOrigin(request)) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const session = await auth()
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
