@@ -45,6 +45,13 @@ model Product {
   tokopediaClicks Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([categoryId])
+  @@index([isActive, categoryId])
+  @@index([createdAt(sort: Desc)])
+  @@index([viewCount(sort: Desc)])
+  @@index([badge])
 }
 
 model SiteSettings {
@@ -61,4 +68,9 @@ model Analytics {
   userAgent String?
   ipHash    String?
   createdAt DateTime @default(now())
+
+  @@index([eventType])
+  @@index([createdAt])
+  @@index([productId])
+  @@index([createdAt, eventType])
 }

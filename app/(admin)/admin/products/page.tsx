@@ -27,8 +27,6 @@ import {
 } from '@/components/ui/alert-dialog'
 import { toast } from 'sonner'
 import { formatRupiah } from '@/lib/utils'
-import { format } from 'date-fns'
-import { id as localeId } from 'date-fns/locale'
 
 interface Product {
     id: string

@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 import { auth } from '@/lib/auth'
 import AdminSidebar from '@/components/admin/AdminSidebar'
@@ -10,7 +9,6 @@ export default async function AdminLayout({
     children: React.ReactNode
 }) {
     const headersList = await headers()
-    const pathname = headersList.get('x-pathname') || headersList.get('x-invoke-path') || ''
 
     // Login page bypasses auth layout
     // We detect this using a simpler approach - try auth and if on login page, skip

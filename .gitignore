@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+Thumbs.db
 
 # debug
 npm-debug.log*
@@ -30,7 +31,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (WAJIB diabaikan!)
 .env
 .env.local
 .env.*.local
@@ -45,12 +46,19 @@ yarn-error.log*
 next-env.d.ts
 global.d.ts
 
-# pwa
+# pwa generated files
 **/public/sw.js
 **/public/workbox-*.js
 **/public/worker-*.js
+**/public/fallback-*.js
 **/public/sw.js.map
 **/public/workbox-*.js.map
 **/public/worker-*.js.map
 
+# prisma generated client
 /lib/generated/prisma
+
+# build logs
+build.log
+build_error.log
+lint_error.txt

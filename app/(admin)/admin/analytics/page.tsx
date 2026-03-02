@@ -61,7 +61,7 @@ export default async function AnalyticsPage({
         }),
 
         // 5. Events per hari untuk periode yang dipilih
-        prisma.$queryRaw<any[]>`
+        prisma.$queryRaw<{ date: Date; eventType: string; count: bigint }[]>`
       SELECT 
         DATE_TRUNC('day', "createdAt") as date,
         "eventType",
