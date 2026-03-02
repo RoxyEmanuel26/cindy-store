@@ -160,9 +160,9 @@ export default function AdminSidebar({ userName = 'Admin', onClose }: AdminSideb
             </ScrollArea>
 
             {/* Footer Sidebar */}
-            <div className="border-t border-white/10 px-4 py-4">
-                <div className="mb-3 px-2">
-                    <p className="text-sm font-medium text-white">{userName}</p>
+            <div className="border-t border-white/10 px-4 py-4 bg-black/10">
+                <div className="mb-2 px-2">
+                    <p className="text-sm font-medium text-white truncate">{userName}</p>
                     <p className="text-xs text-white/50">Administrator</p>
                 </div>
                 <button

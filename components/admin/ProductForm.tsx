@@ -73,6 +73,13 @@ export default function ProductForm({ initialData, isEdit = false }: ProductForm
     const isActive = watch('isActive')
     const slug = slugify(title || '', { lower: true, locale: 'id', strict: true })
 
+    // Sync slug into form value so Zod validation passes
+    useEffect(() => {
+        if (slug) {
+            setValue('slug', slug)
+        }
+    }, [slug, setValue])
+
     const fetchCategories = useCallback(async () => {
         try {
             const res = await fetch('/api/admin/categories')
@@ -133,7 +140,15 @@ export default function ProductForm({ initialData, isEdit = false }: ProductForm
     ]
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit, (formErrors) => {
+            // Show validation errors as toast
+            const firstError = Object.values(formErrors)[0]
+            if (firstError?.message) {
+                toast.error(String(firstError.message))
+            } else {
+                toast.error('Mohon lengkapi semua field yang wajib diisi')
+            }
+        })} className="space-y-6">
             {/* Header */}
             <div className="flex items-center justify-between">
                 <Link href="/admin/products">
@@ -306,16 +321,17 @@ export default function ProductForm({ initialData, isEdit = false }: ProductForm
                             </p>
                             <div className="grid grid-cols-2 gap-3">
                                 {additionalImages.map((img, i) => (
-                                    <ImageUpload
-                                        key={i}
-                                        value={img}
-                                        onChange={(url) => {
-                                            const newImages = [...additionalImages]
-                                            newImages[i] = url
-                                            setAdditionalImages(newImages)
-                                        }}
-                                        aspectRatio="1:1"
-                                    />
+                                    <div key={i} className="w-full">
+                                        <ImageUpload
+                                            value={img}
+                                            onChange={(url) => {
+                                                const newImages = [...additionalImages]
+                                                newImages[i] = url
+                                                setAdditionalImages(newImages)
+                                            }}
+                                            aspectRatio="1:1"
+                                        />
+                                    </div>
                                 ))}
                             </div>
                         </div>
@@ -421,7 +437,7 @@ export default function ProductForm({ initialData, isEdit = false }: ProductForm
             </div>
 
             {/* Submit Buttons */}
-            <div className="flex items-center justify-end gap-3 sticky bottom-0 bg-gray-50 dark:bg-dark-bg py-4 -mx-4 px-4 md:-mx-6 md:px-6 border-t border-brand-border dark:border-dark-border">
+            <div className="flex items-center justify-end gap-3 pt-6 pb-2 border-t border-brand-border dark:border-dark-border">
                 <Link href="/admin/products">
                     <Button type="button" variant="outline">
                         Batal
