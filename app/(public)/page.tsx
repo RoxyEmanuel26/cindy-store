@@ -84,9 +84,14 @@ export default async function HomePage() {
                 </div>
 
                 {settings.hero_image && (
-                    <div className="absolute right-0 top-0 w-1/2 h-full hidden md:block">
+                    <div
+                        className="absolute right-0 top-0 w-1/2 h-full hidden md:block"
+                        style={{
+                            WebkitMaskImage: 'linear-gradient(to right, transparent, black 30%)',
+                            maskImage: 'linear-gradient(to right, transparent, black 30%)'
+                        }}
+                    >
                         <Image src={settings.hero_image} alt="Hero" fill className="object-cover opacity-80" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-white dark:from-dark-bg to-transparent" />
                     </div>
                 )}
             </section>
