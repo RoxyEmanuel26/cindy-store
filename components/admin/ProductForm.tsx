@@ -437,7 +437,7 @@ export default function ProductForm({ initialData, isEdit = false }: ProductForm
             </div>
 
             {/* Submit Buttons */}
-            <div className="flex items-center justify-end gap-3 pt-6 pb-2 border-t border-brand-border dark:border-dark-border">
+            <div className="sticky bottom-0 -mb-4 md:-mb-6 -mx-4 md:-mx-6 px-4 md:px-6 pt-4 pb-4 md:pb-6 mt-8 bg-gray-50/95 dark:bg-dark-bg/95 backdrop-blur-sm border-t border-brand-border dark:border-dark-border flex items-center justify-end gap-3 z-20">
                 <Link href="/admin/products">
                     <Button type="button" variant="outline">
                         Batal

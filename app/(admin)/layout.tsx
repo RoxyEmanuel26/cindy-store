@@ -38,7 +38,7 @@ export default async function AdminLayout({
                     userName={session.user?.name || 'Admin'}
                     userEmail={session.user?.email || 'admin@cindylay.com'}
                 />
-                <main className="flex-1 overflow-y-auto p-4 md:p-6">
+                <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 relative">
                     {children}
                 </main>
             </div>
