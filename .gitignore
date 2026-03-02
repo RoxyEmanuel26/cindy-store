@@ -62,3 +62,11 @@ global.d.ts
 build.log
 build_error.log
 lint_error.txt
+
+# Build & TS logs (debug files)
+*.log
+tsc-*.txt
+tsc_*.txt
+tsc_*.log
+fix-ts.js
+build_error.log
