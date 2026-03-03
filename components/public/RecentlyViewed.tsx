@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed'
-import ProductCard from './ProductCard'
+import SmallProductCard from './SmallProductCard'
 import SkeletonCard from './SkeletonCard'
 import type { ProductType } from '@/types'
 
@@ -37,20 +37,20 @@ export function RecentlyViewed() {
     if (!loading && products.length === 0) return null
 
     return (
-        <section className="py-12 bg-white dark:bg-dark-bg">
+        <section className="py-10 bg-white dark:bg-dark-bg">
             <div className="container mx-auto px-4">
-                <h2 className="text-2xl font-bold text-brand-text dark:text-dark-text mb-6">
+                <h2 className="text-2xl font-bold text-brand-text dark:text-dark-text mb-5">
                     Terakhir Kamu Lihat 👁️
                 </h2>
 
-                {/* Grid layout — sama persis dengan Produk Pilihan */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                {/* Grid 2 kolom mobile, 4 kolom tablet+, 6 kolom desktop besar */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
                     {loading
-                        ? Array.from({ length: 4 }).map((_, i) => (
+                        ? Array.from({ length: 6 }).map((_, i) => (
                             <SkeletonCard key={i} />
                         ))
                         : products.map((product) => (
-                            <ProductCard key={product.id} product={product} />
+                            <SmallProductCard key={product.id} product={product} />
                         ))
                     }
                 </div>
