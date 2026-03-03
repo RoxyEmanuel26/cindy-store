@@ -46,9 +46,9 @@ export default function SmallProductCard({ product }: SmallProductCardProps) {
                 </div>
 
                 {/* Konten */}
-                <div className="flex flex-col flex-1 px-2.5 pt-2 pb-2.5 min-w-0">
+                <div className="px-2.5 pt-2 pb-2.5 min-w-0">
                     {/* Kategori */}
-                    <span className="text-[10px] text-brand-primary dark:text-dark-primary font-semibold uppercase tracking-wide truncate leading-none">
+                    <span className="text-[10px] text-brand-primary dark:text-dark-primary font-semibold uppercase tracking-wide truncate leading-none block">
                         {product.category?.name}
                     </span>
 
@@ -69,14 +69,6 @@ export default function SmallProductCard({ product }: SmallProductCardProps) {
                         <Eye className="w-2.5 h-2.5 flex-shrink-0" />
                         {product.viewCount ?? 0} dilihat
                     </p>
-
-                    {/* Spacer */}
-                    <div className="flex-1" />
-
-                    {/* Tombol kecil */}
-                    <button className="mt-2 w-full h-7 rounded-lg bg-brand-primary hover:bg-brand-accent active:scale-95 text-white text-[11px] font-semibold transition-all duration-150">
-                        Lihat Detail
-                    </button>
                 </div>
             </motion.div>
         </Link>
