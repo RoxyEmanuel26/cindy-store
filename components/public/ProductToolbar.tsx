@@ -34,7 +34,6 @@ export default function ProductToolbar({
     const router = useRouter()
     const searchParams = useSearchParams()
     const [query, setQuery] = useState(currentQuery || '')
-    const debounceRef = useRef<NodeJS.Timeout>(undefined)
 
     const updateParam = useCallback(
         (key: string, value: string | null) => {
@@ -51,26 +50,23 @@ export default function ProductToolbar({
         setQuery(currentQuery || '')
     }, [currentQuery])
 
-    const handleSearch = (value: string) => {
-        setQuery(value)
-        if (debounceRef.current) clearTimeout(debounceRef.current)
-        debounceRef.current = setTimeout(() => {
-            updateParam('q', value || null)
-        }, 500)
+    const handleSearchSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        updateParam('q', query || null)
     }
 
     return (
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             {/* Search */}
-            <div className="relative w-full sm:w-72">
+            <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-72">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-muted" />
                 <Input
                     value={query}
-                    onChange={(e) => handleSearch(e.target.value)}
+                    onChange={(e) => setQuery(e.target.value)}
                     placeholder="Cari nama produk..."
                     className="pl-10"
                 />
-            </div>
+            </form>
 
             <div className="flex items-center gap-3 w-full sm:w-auto">
                 {/* Sort */}
