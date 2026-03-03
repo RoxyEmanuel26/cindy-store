@@ -36,30 +36,29 @@ export function RecentlyViewed() {
 
     if (!loading && products.length === 0) return null
 
+    const cardClass = 'flex-shrink-0 w-[172px] sm:w-[200px] snap-start flex'
+
     return (
         <section className="py-12 bg-white dark:bg-dark-bg">
             <div className="container mx-auto px-4">
                 <h2 className="text-2xl font-bold text-brand-text dark:text-dark-text mb-6">
-                    Terakhir Kamu Lihat 👁
+                    Terakhir Kamu Lihat 👁️
                 </h2>
 
-                {loading ? (
-                    <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-brand-secondary snap-x snap-mandatory">
-                        {Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className="flex-shrink-0 w-44 sm:w-52 snap-start flex">
+                <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-brand-secondary snap-x snap-mandatory">
+                    {loading
+                        ? Array.from({ length: 4 }).map((_, i) => (
+                            <div key={i} className={cardClass}>
                                 <SkeletonCard />
                             </div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-brand-secondary snap-x snap-mandatory">
-                        {products.map((product) => (
-                            <div key={product.id} className="flex-shrink-0 w-44 sm:w-52 snap-start flex">
+                        ))
+                        : products.map((product) => (
+                            <div key={product.id} className={cardClass}>
                                 <ProductCard product={product} />
                             </div>
-                        ))}
-                    </div>
-                )}
+                        ))
+                    }
+                </div>
             </div>
         </section>
     )
