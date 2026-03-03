@@ -94,9 +94,9 @@ export default function FilterSidebar({
                         params.delete('page')
                         router.push(`/products?${params.toString()}`)
                     }}
-                    className="mt-2"
+                    className="mt-6 mb-2"
                 />
-                <div className="flex justify-between text-xs text-brand-muted">
+                <div className="flex justify-between text-xs font-medium text-brand-muted dark:text-dark-muted">
                     <span>Rp {(currentMinPrice || priceRange.min).toLocaleString('id-ID')}</span>
                     <span>Rp {(currentMaxPrice || priceRange.max).toLocaleString('id-ID')}</span>
                 </div>
