@@ -54,14 +54,17 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                 </div>
 
                 {/* Info — flex-1 pushes button to bottom */}
-                <div className="flex flex-col flex-1 p-3">
+                <div className="flex flex-col flex-1 p-3 min-w-0">
                     <span className="text-xs text-brand-primary dark:text-dark-primary font-medium truncate">
                         {product.category?.name}
                     </span>
 
-                    <h3 className="font-semibold text-sm mt-1 text-brand-text dark:text-dark-text line-clamp-2 leading-tight min-h-[2.5rem]">
-                        {product.title}
-                    </h3>
+                    {/* Title wrapper with fixed height and strict overflow clipping */}
+                    <div className="mt-1 overflow-hidden" style={{ height: '2.5rem' }}>
+                        <h3 className="font-semibold text-sm text-brand-text dark:text-dark-text line-clamp-2 leading-5">
+                            {product.title}
+                        </h3>
+                    </div>
 
                     <p className="text-brand-primary dark:text-dark-primary font-bold text-base mt-2">
                         {formatRupiah(product.price)}
