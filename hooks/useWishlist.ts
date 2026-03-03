@@ -1,18 +1,24 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 const WISHLIST_KEY = 'cindy-lay-wishlist'
 
 export function useWishlist() {
     const [wishlistIds, setWishlistIds] = useState<string[]>([])
     const [mounted, setMounted] = useState(false)
+    // ref untuk akses nilai terkini tanpa closure stale
+    const wishlistRef = useRef<string[]>([])
 
     useEffect(() => {
         setMounted(true)
         try {
             const stored = localStorage.getItem(WISHLIST_KEY)
-            if (stored) setWishlistIds(JSON.parse(stored))
+            if (stored) {
+                const parsed = JSON.parse(stored)
+                setWishlistIds(parsed)
+                wishlistRef.current = parsed
+            }
         } catch {
             setWishlistIds([])
         }
@@ -20,7 +26,9 @@ export function useWishlist() {
         const handler = () => {
             try {
                 const stored = localStorage.getItem(WISHLIST_KEY)
-                setWishlistIds(stored ? JSON.parse(stored) : [])
+                const parsed = stored ? JSON.parse(stored) : []
+                setWishlistIds(parsed)
+                wishlistRef.current = parsed
             } catch { /* ignore */ }
         }
         window.addEventListener('wishlist-updated', handler)
@@ -33,48 +41,36 @@ export function useWishlist() {
 
     const saveToStorage = useCallback((ids: string[]) => {
         localStorage.setItem(WISHLIST_KEY, JSON.stringify(ids))
+        wishlistRef.current = ids
         setWishlistIds(ids)
         window.dispatchEvent(new Event('wishlist-updated'))
     }, [])
 
     const addToWishlist = useCallback((productId: string) => {
-        setWishlistIds((prev) => {
-            if (prev.includes(productId)) return prev
-            const next = [...prev, productId]
-            localStorage.setItem(WISHLIST_KEY, JSON.stringify(next))
-            window.dispatchEvent(new Event('wishlist-updated'))
-            return next
-        })
-    }, [])
+        const current = wishlistRef.current
+        if (current.includes(productId)) return
+        const next = [...current, productId]
+        saveToStorage(next)
+    }, [saveToStorage])
 
     const removeFromWishlist = useCallback((productId: string) => {
-        setWishlistIds((prev) => {
-            const next = prev.filter((id) => id !== productId)
-            localStorage.setItem(WISHLIST_KEY, JSON.stringify(next))
-            window.dispatchEvent(new Event('wishlist-updated'))
-            return next
-        })
-    }, [])
+        const next = wishlistRef.current.filter((id) => id !== productId)
+        saveToStorage(next)
+    }, [saveToStorage])
 
     const toggleWishlist = useCallback((productId: string): boolean => {
-        let added = false
-        setWishlistIds((prev) => {
-            if (prev.includes(productId)) {
-                const next = prev.filter((id) => id !== productId)
-                localStorage.setItem(WISHLIST_KEY, JSON.stringify(next))
-                window.dispatchEvent(new Event('wishlist-updated'))
-                added = false
-                return next
-            } else {
-                const next = [...prev, productId]
-                localStorage.setItem(WISHLIST_KEY, JSON.stringify(next))
-                window.dispatchEvent(new Event('wishlist-updated'))
-                added = true
-                return next
-            }
-        })
-        return added
-    }, [])
+        // Cek state SEBELUM update — bukan di dalam setState callback
+        const isCurrentlyInWishlist = wishlistRef.current.includes(productId)
+        if (isCurrentlyInWishlist) {
+            const next = wishlistRef.current.filter((id) => id !== productId)
+            saveToStorage(next)
+            return false // dihapus
+        } else {
+            const next = [...wishlistRef.current, productId]
+            saveToStorage(next)
+            return true  // ditambahkan
+        }
+    }, [saveToStorage])
 
     const isInWishlist = useCallback((productId: string) => {
         return wishlistIds.includes(productId)
