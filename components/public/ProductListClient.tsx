@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import ProductCard from '@/components/public/ProductCard'
 import { InfiniteScrollTrigger } from '@/components/public/InfiniteScrollTrigger'
 import { StaggerContainer, StaggerItem } from '@/components/animations/StaggerContainer'
@@ -19,17 +19,20 @@ export default function ProductListClient({
     searchParams,
     limit = 12,
 }: ProductListClientProps) {
+    // Serialize searchParams to a stable key — when this changes, we know the query changed
+    const searchKey = useMemo(() => JSON.stringify(searchParams), [searchParams])
+
     const [products, setProducts] = useState<ProductType[]>(initialProducts)
     const [page, setPage] = useState(1)
     const [isLoading, setIsLoading] = useState(false)
     const [hasMore, setHasMore] = useState(initialProducts.length < initialTotal)
 
-    // Reset when search params change (via initial data)
+    // Reset when search params change (use searchKey for reliable detection)
     useEffect(() => {
         setProducts(initialProducts)
         setPage(1)
         setHasMore(initialProducts.length < initialTotal)
-    }, [initialProducts, initialTotal])
+    }, [searchKey, initialProducts, initialTotal])
 
     const loadMore = useCallback(async () => {
         if (isLoading || !hasMore) return
@@ -59,7 +62,10 @@ export default function ProductListClient({
 
     return (
         <>
-            <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 min-h-[50vh]">
+            <StaggerContainer
+                key={searchKey}
+                className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 min-h-[50vh]"
+            >
                 {products.map((product) => (
                     <StaggerItem key={product.id}>
                         <ProductCard product={product} />
