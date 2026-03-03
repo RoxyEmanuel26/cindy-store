@@ -36,8 +36,6 @@ export function RecentlyViewed() {
 
     if (!loading && products.length === 0) return null
 
-    const cardClass = 'flex-shrink-0 w-[172px] sm:w-[200px] snap-start flex'
-
     return (
         <section className="py-12 bg-white dark:bg-dark-bg">
             <div className="container mx-auto px-4">
@@ -45,17 +43,14 @@ export function RecentlyViewed() {
                     Terakhir Kamu Lihat 👁️
                 </h2>
 
-                <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-brand-secondary snap-x snap-mandatory">
+                {/* Grid layout — sama persis dengan Produk Pilihan */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                     {loading
                         ? Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className={cardClass}>
-                                <SkeletonCard />
-                            </div>
+                            <SkeletonCard key={i} />
                         ))
                         : products.map((product) => (
-                            <div key={product.id} className={cardClass}>
-                                <ProductCard product={product} />
-                            </div>
+                            <ProductCard key={product.id} product={product} />
                         ))
                     }
                 </div>
