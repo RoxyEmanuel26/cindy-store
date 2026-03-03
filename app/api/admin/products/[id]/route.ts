@@ -53,8 +53,8 @@ export async function PUT(
             where: { id },
             data: { isActive: body.isActive },
         })
-        revalidateTag('products')
-        revalidateTag('categories')
+        revalidateTag('products', { expire: 0 })
+        revalidateTag('categories', { expire: 0 })
         return NextResponse.json(product)
     }
 
@@ -94,8 +94,8 @@ export async function PUT(
         include: { category: true },
     })
 
-    revalidateTag('products')
-    revalidateTag('categories')
+    revalidateTag('products', { expire: 0 })
+    revalidateTag('categories', { expire: 0 })
 
     return NextResponse.json(product)
 }
@@ -117,8 +117,8 @@ export async function DELETE(
 
     await prisma.product.delete({ where: { id } })
 
-    revalidateTag('products')
-    revalidateTag('categories')
+    revalidateTag('products', { expire: 0 })
+    revalidateTag('categories', { expire: 0 })
 
     return NextResponse.json({ message: 'Produk berhasil dihapus' })
 }

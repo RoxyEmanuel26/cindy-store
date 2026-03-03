@@ -99,8 +99,8 @@ export async function POST(request: NextRequest) {
         include: { category: true },
     })
 
-    revalidateTag('products')
-    revalidateTag('categories')
+    revalidateTag('products', { expire: 0 })
+    revalidateTag('categories', { expire: 0 })
 
     return NextResponse.json(product, { status: 201 })
 }

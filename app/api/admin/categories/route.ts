@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
         data: { name, slug },
     })
 
-    revalidateTag('categories')
+    revalidateTag('categories', { expire: 0 })
 
     return NextResponse.json(category, { status: 201 })
 }

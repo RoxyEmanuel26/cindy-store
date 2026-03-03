@@ -67,7 +67,7 @@ export async function PUT(request: NextRequest) {
         settingsObj[s.key] = s.value
     }
 
-    revalidateTag('settings')
+    revalidateTag('settings', { expire: 0 })
 
     return NextResponse.json(settingsObj)
 }

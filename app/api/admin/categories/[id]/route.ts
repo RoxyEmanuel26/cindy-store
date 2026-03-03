@@ -52,7 +52,7 @@ export async function PUT(
         data: { name, slug },
     })
 
-    revalidateTag('categories')
+    revalidateTag('categories', { expire: 0 })
 
     return NextResponse.json(category)
 }
@@ -85,7 +85,7 @@ export async function DELETE(
 
     await prisma.category.delete({ where: { id } })
 
-    revalidateTag('categories')
+    revalidateTag('categories', { expire: 0 })
 
     return NextResponse.json({ message: 'Kategori berhasil dihapus' })
 }
