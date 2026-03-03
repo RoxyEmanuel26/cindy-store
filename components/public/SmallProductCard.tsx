@@ -26,8 +26,8 @@ export default function SmallProductCard({ product }: SmallProductCardProps) {
                 transition={{ duration: 0.18 }}
                 className="bg-white dark:bg-dark-surface rounded-xl overflow-hidden shadow-sm flex flex-col h-full border border-brand-border/50 dark:border-dark-border cursor-pointer"
             >
-                {/* Image — fixed height agar semua card sama */}
-                <div className="relative w-full overflow-hidden flex-shrink-0" style={{ height: '140px' }}>
+                {/* Image — portrait ratio 3:4 */}
+                <div className="relative w-full overflow-hidden flex-shrink-0" style={{ aspectRatio: '3/4' }}>
                     <Image
                         src={product.image}
                         alt={product.title}
@@ -52,7 +52,7 @@ export default function SmallProductCard({ product }: SmallProductCardProps) {
                         {product.category?.name}
                     </span>
 
-                    {/* Judul — 2 baris max, strict clip */}
+                    {/* Judul — 2 baris max */}
                     <div className="mt-1 overflow-hidden" style={{ height: '2.4rem' }}>
                         <h3 className="font-semibold text-[12px] leading-5 text-brand-text dark:text-dark-text line-clamp-2">
                             {product.title}
