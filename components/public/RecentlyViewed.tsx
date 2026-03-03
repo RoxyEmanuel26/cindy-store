@@ -46,7 +46,7 @@ export function RecentlyViewed() {
                 {loading ? (
                     <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-brand-secondary snap-x snap-mandatory">
                         {Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className="flex-shrink-0 w-40 sm:w-44 snap-start flex">
+                            <div key={i} className="flex-shrink-0 w-44 sm:w-52 snap-start flex">
                                 <SkeletonCard />
                             </div>
                         ))}
@@ -54,7 +54,7 @@ export function RecentlyViewed() {
                 ) : (
                     <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-brand-secondary snap-x snap-mandatory">
                         {products.map((product) => (
-                            <div key={product.id} className="flex-shrink-0 w-40 sm:w-44 snap-start flex">
+                            <div key={product.id} className="flex-shrink-0 w-44 sm:w-52 snap-start flex">
                                 <ProductCard product={product} />
                             </div>
                         ))}
