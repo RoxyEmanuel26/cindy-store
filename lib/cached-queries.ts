@@ -41,7 +41,7 @@ export const getCachedFeaturedProducts = unstable_cache(
 export const getCachedNewProducts = unstable_cache(
     async () => {
         return prisma.product.findMany({
-            where: { isActive: true },
+            where: { isActive: true, badge: 'NEW' },
             select: {
                 id: true,
                 title: true,
