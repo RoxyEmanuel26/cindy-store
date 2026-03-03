@@ -3,16 +3,8 @@ import { AnalyticsOverviewCards } from '@/components/admin/analytics/AnalyticsOv
 import { TopProductsTable } from '@/components/admin/analytics/TopProductsTable'
 import { ConversionFunnel } from '@/components/admin/analytics/ConversionFunnel'
 import { PeriodSelector } from '@/components/admin/analytics/PeriodSelector'
-import dynamic from 'next/dynamic'
-
-const AnalyticsLineChart = dynamic(
-    () => import('@/components/admin/analytics/AnalyticsLineChart').then(mod => mod.AnalyticsLineChart),
-    { ssr: false, loading: () => <div className="h-[400px] w-full flex items-center justify-center bg-brand-surface dark:bg-dark-surface rounded-2xl animate-pulse"><p className="text-brand-muted">Loading chart...</p></div> }
-)
-const CategoryStatsChart = dynamic(
-    () => import('@/components/admin/analytics/CategoryStatsChart').then(mod => mod.CategoryStatsChart),
-    { ssr: false, loading: () => <div className="h-[300px] w-full flex items-center justify-center bg-brand-surface dark:bg-dark-surface rounded-2xl animate-pulse"><p className="text-brand-muted">Loading chart...</p></div> }
-)
+import { AnalyticsLineChart } from '@/components/admin/analytics/AnalyticsLineChart'
+import { CategoryStatsChart } from '@/components/admin/analytics/CategoryStatsChart'
 
 export default async function AnalyticsPage({
     searchParams,
