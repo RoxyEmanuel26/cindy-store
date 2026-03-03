@@ -27,7 +27,7 @@ const withPWA = withPWAInit({
     },
     {
       urlPattern: /^https:\/\/res\.cloudinary\.com/,
-      handler: 'CacheFirst',
+      handler: 'StaleWhileRevalidate',
       options: {
         cacheName: 'cloudinary-images',
         cacheableResponse: { statuses: [0, 200] },
@@ -35,12 +35,28 @@ const withPWA = withPWAInit({
       },
     },
     {
-      urlPattern: /^https?.+\/api\/products/,
+      urlPattern: /^https?.+\/api\/(?!auth|admin|upload).*/i,
       handler: 'NetworkFirst',
       options: {
-        cacheName: 'products-api',
+        cacheName: 'api-responses',
         expiration: { maxEntries: 50, maxAgeSeconds: 300 },
         networkTimeoutSeconds: 10,
+      },
+    },
+    {
+      urlPattern: /\.(?:png|gif|jpg|jpeg|webp|svg)$/i,
+      handler: 'CacheFirst',
+      options: {
+        cacheName: 'static-images',
+        expiration: { maxEntries: 100, maxAgeSeconds: 2592000 },
+      },
+    },
+    {
+      urlPattern: /\/_next\/image\?url/i,
+      handler: 'StaleWhileRevalidate',
+      options: {
+        cacheName: 'next-image-cache',
+        expiration: { maxEntries: 100, maxAgeSeconds: 2592000 },
       },
     },
     {
@@ -50,6 +66,9 @@ const withPWA = withPWAInit({
         cacheName: 'pages',
         expiration: { maxEntries: 50, maxAgeSeconds: 3600 },
         networkTimeoutSeconds: 5,
+        precacheFallback: {
+          fallbackURL: '/offline',
+        },
       },
     },
   ],
@@ -134,4 +153,10 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withPWA(nextConfig)
+import withBundleAnalyzerInit from '@next/bundle-analyzer'
+
+const withBundleAnalyzer = withBundleAnalyzerInit({
+  enabled: process.env.ANALYZE === 'true',
+})
+
+export default withBundleAnalyzer(withPWA(nextConfig))

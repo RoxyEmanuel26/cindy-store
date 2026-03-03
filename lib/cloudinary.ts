@@ -14,6 +14,7 @@ export async function uploadImage(
     const result = await cloudinary.uploader.upload(file, {
         folder,
         transformation: [
+            { width: 1200, height: 1200, crop: 'limit' },
             { quality: 'auto:good' },
             { fetch_format: 'auto' },
         ],

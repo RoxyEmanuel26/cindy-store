@@ -5,6 +5,7 @@ import { SettingsSchema } from '@/lib/validations'
 import { validateOrigin } from '@/lib/csrf'
 import { parseAndValidate } from '@/lib/api-helpers'
 import { sanitizeText, sanitizeDescription, sanitizeUrl } from '@/lib/sanitize'
+import { revalidateTag } from 'next/cache'
 
 export async function GET() {
     const session = await auth()
@@ -65,6 +66,8 @@ export async function PUT(request: NextRequest) {
     for (const s of settings) {
         settingsObj[s.key] = s.value
     }
+
+    revalidateTag('settings')
 
     return NextResponse.json(settingsObj)
 }

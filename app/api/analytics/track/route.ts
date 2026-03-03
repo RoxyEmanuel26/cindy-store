@@ -12,26 +12,36 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Invalid event type' }, { status: 400 })
         }
 
-        await prisma.analytics.create({
-            data: {
-                eventType,
-                productId: productId || null,
-                userAgent: request.headers.get('user-agent'),
-            },
-        })
+        // Fire and forget analytics event
+        const trackEvent = async () => {
+            try {
+                await prisma.analytics.create({
+                    data: {
+                        eventType,
+                        productId: productId || null,
+                        userAgent: request.headers.get('user-agent'),
+                    },
+                })
 
-        if (eventType === 'shopee_click' && productId) {
-            await prisma.product.update({
-                where: { id: productId },
-                data: { shopeeClicks: { increment: 1 } },
-            })
+                if (eventType === 'shopee_click' && productId) {
+                    await prisma.product.update({
+                        where: { id: productId },
+                        data: { shopeeClicks: { increment: 1 } },
+                    })
+                }
+                if (eventType === 'tokopedia_click' && productId) {
+                    await prisma.product.update({
+                        where: { id: productId },
+                        data: { tokopediaClicks: { increment: 1 } },
+                    })
+                }
+            } catch (err) {
+                console.error('Analytics tracking error:', err)
+                captureError(err, { endpoint: '/api/analytics/track', bgTask: true })
+            }
         }
-        if (eventType === 'tokopedia_click' && productId) {
-            await prisma.product.update({
-                where: { id: productId },
-                data: { tokopediaClicks: { increment: 1 } },
-            })
-        }
+
+        trackEvent()
 
         return NextResponse.json({ success: true })
     } catch (error) {

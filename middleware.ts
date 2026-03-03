@@ -1,37 +1,10 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-
-// Simple in-memory rate limiter
-const requestCounts = new Map<string, { count: number; resetAt: number }>()
-
-function checkRateLimit(ip: string, limit: number, windowMs: number): boolean {
-    const now = Date.now()
-    const entry = requestCounts.get(ip)
-
-    if (!entry || now > entry.resetAt) {
-        requestCounts.set(ip, { count: 1, resetAt: now + windowMs })
-        return true
-    }
-
-    if (entry.count >= limit) return false
-    entry.count++
-    return true
-}
-
-// Cleanup stale entries every 5 mins
-if (typeof globalThis !== 'undefined') {
-    const cleanup = () => {
-        const now = Date.now()
-        for (const [key, value] of requestCounts.entries()) {
-            if (now > value.resetAt) requestCounts.delete(key)
-        }
-    }
-    // Use a global flag to avoid multiple intervals
-    if (!(globalThis as any).__rateLimitCleanup) {
-        (globalThis as any).__rateLimitCleanup = true
-        setInterval(cleanup, 5 * 60 * 1000)
-    }
-}
+import {
+    loginRateLimit,
+    uploadRateLimit,
+    apiRateLimit,
+} from '@/lib/rate-limit'
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl
@@ -40,9 +13,10 @@ export async function middleware(request: NextRequest) {
         request.headers.get('x-real-ip') ||
         '127.0.0.1'
 
-    // Rate limit: login (10 req/min)
+    // Rate limit: login (5 req/min)
     if (pathname === '/api/auth/signin' || pathname === '/api/auth/callback/credentials') {
-        if (!checkRateLimit(`login:${ip}`, 10, 60 * 1000)) {
+        const { success } = await loginRateLimit.limit(ip)
+        if (!success) {
             return NextResponse.json(
                 { error: 'Terlalu banyak percobaan. Tunggu 1 menit.', code: 'RATE_LIMITED' },
                 { status: 429 }
@@ -50,9 +24,10 @@ export async function middleware(request: NextRequest) {
         }
     }
 
-    // Rate limit: upload (20 req/min)
+    // Rate limit: upload (10 req/min)
     if (pathname.startsWith('/api/upload')) {
-        if (!checkRateLimit(`upload:${ip}`, 20, 60 * 1000)) {
+        const { success } = await uploadRateLimit.limit(ip)
+        if (!success) {
             return NextResponse.json(
                 { error: 'Terlalu banyak upload. Tunggu sebentar.' },
                 { status: 429 }
@@ -62,7 +37,8 @@ export async function middleware(request: NextRequest) {
 
     // Rate limit: analytics (60 req/min)
     if (pathname.startsWith('/api/analytics')) {
-        if (!checkRateLimit(`analytics:${ip}`, 60, 60 * 1000)) {
+        const { success } = await apiRateLimit.limit(ip)
+        if (!success) {
             return new NextResponse(null, { status: 429 })
         }
     }
@@ -117,11 +93,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: [
-        '/admin/:path*',
-        '/api/admin/:path*',
-        '/api/auth/:path*',
-        '/api/upload/:path*',
-        '/api/analytics/:path*',
-    ],
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }

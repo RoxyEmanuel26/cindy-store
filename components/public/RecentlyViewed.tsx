@@ -44,17 +44,17 @@ export function RecentlyViewed() {
                 </h2>
 
                 {loading ? (
-                    <div className="flex gap-4 overflow-x-auto pb-4">
+                    <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-brand-secondary snap-x snap-mandatory">
                         {Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className="flex-shrink-0 w-48">
+                            <div key={i} className="flex-shrink-0 w-40 sm:w-44 snap-start flex">
                                 <SkeletonCard />
                             </div>
                         ))}
                     </div>
                 ) : (
-                    <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-brand-secondary">
+                    <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-brand-secondary snap-x snap-mandatory">
                         {products.map((product) => (
-                            <div key={product.id} className="flex-shrink-0 w-48">
+                            <div key={product.id} className="flex-shrink-0 w-40 sm:w-44 snap-start flex">
                                 <ProductCard product={product} />
                             </div>
                         ))}

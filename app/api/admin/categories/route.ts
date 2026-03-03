@@ -23,6 +23,8 @@ export async function GET() {
     return NextResponse.json(categories)
 }
 
+import { revalidateTag } from 'next/cache'
+
 export async function POST(request: NextRequest) {
     if (!validateOrigin(request)) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -57,6 +59,8 @@ export async function POST(request: NextRequest) {
     const category = await prisma.category.create({
         data: { name, slug },
     })
+
+    revalidateTag('categories')
 
     return NextResponse.json(category, { status: 201 })
 }

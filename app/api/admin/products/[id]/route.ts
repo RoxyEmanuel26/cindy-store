@@ -30,6 +30,8 @@ export async function GET(
     return NextResponse.json(product)
 }
 
+import { revalidateTag } from 'next/cache'
+
 export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -51,6 +53,8 @@ export async function PUT(
             where: { id },
             data: { isActive: body.isActive },
         })
+        revalidateTag('products')
+        revalidateTag('categories')
         return NextResponse.json(product)
     }
 
@@ -90,6 +94,9 @@ export async function PUT(
         include: { category: true },
     })
 
+    revalidateTag('products')
+    revalidateTag('categories')
+
     return NextResponse.json(product)
 }
 
@@ -109,6 +116,9 @@ export async function DELETE(
     const { id } = await params
 
     await prisma.product.delete({ where: { id } })
+
+    revalidateTag('products')
+    revalidateTag('categories')
 
     return NextResponse.json({ message: 'Produk berhasil dihapus' })
 }

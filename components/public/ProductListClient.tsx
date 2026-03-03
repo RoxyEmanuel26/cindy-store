@@ -59,7 +59,7 @@ export default function ProductListClient({
 
     return (
         <>
-            <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+            <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6 min-h-[50vh]">
                 {products.map((product) => (
                     <StaggerItem key={product.id}>
                         <ProductCard product={product} />

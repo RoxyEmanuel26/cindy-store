@@ -51,6 +51,8 @@ export async function GET(request: NextRequest) {
     })
 }
 
+import { revalidateTag } from 'next/cache'
+
 export async function POST(request: NextRequest) {
     if (!validateOrigin(request)) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -96,6 +98,9 @@ export async function POST(request: NextRequest) {
         },
         include: { category: true },
     })
+
+    revalidateTag('products')
+    revalidateTag('categories')
 
     return NextResponse.json(product, { status: 201 })
 }

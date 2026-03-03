@@ -8,7 +8,8 @@ import { Search, Heart, Menu, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { DarkModeToggle } from '@/components/public/DarkModeToggle'
-import { SearchOverlay } from '@/components/public/SearchOverlay'
+import dynamic from 'next/dynamic'
+const SearchOverlay = dynamic(() => import('@/components/public/SearchOverlay').then(mod => mod.SearchOverlay), { ssr: false })
 import { useWishlist } from '@/hooks/useWishlist'
 import type { SiteSettingsType } from '@/types'
 
@@ -57,8 +58,8 @@ export function Header({ settings }: HeaderProps) {
                                     key={link.href}
                                     href={link.href}
                                     className={`text-sm font-medium pb-1 ${isActive
-                                            ? 'text-brand-primary font-semibold border-b-2 border-brand-primary'
-                                            : 'text-brand-text dark:text-dark-text hover:text-brand-primary'
+                                        ? 'text-brand-primary font-semibold border-b-2 border-brand-primary'
+                                        : 'text-brand-text dark:text-dark-text hover:text-brand-primary'
                                         }`}
                                 >
                                     {link.label}
@@ -106,8 +107,8 @@ export function Header({ settings }: HeaderProps) {
                                                 key={link.href}
                                                 href={link.href}
                                                 className={`px-4 py-3 rounded-lg text-sm font-medium ${isActive
-                                                        ? 'bg-brand-primary/10 text-brand-primary font-semibold'
-                                                        : 'text-brand-text dark:text-dark-text hover:bg-brand-surface dark:hover:bg-dark-bg'
+                                                    ? 'bg-brand-primary/10 text-brand-primary font-semibold'
+                                                    : 'text-brand-text dark:text-dark-text hover:bg-brand-surface dark:hover:bg-dark-bg'
                                                     }`}
                                             >
                                                 {link.label}

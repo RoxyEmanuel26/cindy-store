@@ -60,6 +60,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={poppins.variable} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://www.clarity.ms" crossOrigin="anonymous" />
+      </head>
       <body className="font-sans bg-brand-bg dark:bg-dark-bg text-brand-text dark:text-dark-text antialiased">
         <GoogleAnalytics />
         <MicrosoftClarity />

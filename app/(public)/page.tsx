@@ -15,6 +15,13 @@ import { generatePageMetadata } from '@/lib/metadata'
 import { getOrganizationSchema, getWebsiteSchema } from '@/lib/structured-data'
 import { JsonLd } from '@/components/public/JsonLd'
 
+import {
+    getCachedCategories,
+    getCachedFeaturedProducts,
+    getCachedNewProducts,
+    getCachedProductCount
+} from '@/lib/cached-queries'
+
 export const revalidate = 60
 
 export const metadata = generatePageMetadata({
@@ -27,23 +34,10 @@ export default async function HomePage() {
     const [settings, featuredProducts, newProducts, categories, totalProducts] =
         await Promise.all([
             getSiteSettings(),
-            prisma.product.findMany({
-                where: { isActive: true, badge: { in: ['HOT', 'BEST SELLER'] } },
-                include: { category: true },
-                orderBy: { viewCount: 'desc' },
-                take: 8,
-            }),
-            prisma.product.findMany({
-                where: { isActive: true },
-                include: { category: true },
-                orderBy: { createdAt: 'desc' },
-                take: 8,
-            }),
-            prisma.category.findMany({
-                include: { _count: { select: { products: true } } },
-                orderBy: { name: 'asc' },
-            }),
-            prisma.product.count({ where: { isActive: true } }),
+            getCachedFeaturedProducts(),
+            getCachedNewProducts(),
+            getCachedCategories(),
+            getCachedProductCount(),
         ])
 
     return (
@@ -135,7 +129,7 @@ export default async function HomePage() {
                             </div>
                         </FadeIn>
                         <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                            {categories.map((category) => (
+                            {categories.map((category: any) => (
                                 <StaggerItem key={category.id}>
                                     <CategoryCard category={category} />
                                 </StaggerItem>

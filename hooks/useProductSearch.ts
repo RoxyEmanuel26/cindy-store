@@ -4,6 +4,7 @@ import Fuse from 'fuse.js'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { trackSearch } from '@/lib/analytics-events'
+import { useDebounce } from 'use-debounce'
 
 const FUSE_OPTIONS = {
     keys: [
@@ -18,6 +19,8 @@ const FUSE_OPTIONS = {
 export function useProductSearch() {
     const [products, setProducts] = useState<any[]>([])
     const [query, setQuery] = useState('')
+    const [debouncedQuery] = useDebounce(query, 300) // 300ms debounce
+
     const [results, setResults] = useState<any[]>([])
     const [isOpen, setIsOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -37,19 +40,21 @@ export function useProductSearch() {
 
     const search = useCallback((q: string) => {
         setQuery(q)
+    }, [])
 
-        if (q.length < 2) {
+    useEffect(() => {
+        if (debouncedQuery.length < 2) {
             setResults([])
             setIsOpen(false)
             return
         }
 
         if (fuseRef.current) {
-            const fuseResults = fuseRef.current.search(q, { limit: 6 })
+            const fuseResults = fuseRef.current.search(debouncedQuery, { limit: 6 })
             setResults(fuseResults.map((r) => r.item))
             setIsOpen(true)
         }
-    }, [])
+    }, [debouncedQuery])
 
     const handleSelect = useCallback((slug: string) => {
         setIsOpen(false)
@@ -58,12 +63,12 @@ export function useProductSearch() {
     }, [router])
 
     const handleSubmit = useCallback(() => {
-        if (query.length > 0) {
+        if (debouncedQuery.length > 0) {
             setIsOpen(false)
-            trackSearch(query, results.length)
-            router.push(`/products?q=${encodeURIComponent(query)}`)
+            trackSearch(debouncedQuery, results.length)
+            router.push(`/products?q=${encodeURIComponent(debouncedQuery)}`)
         }
-    }, [query, results.length, router])
+    }, [debouncedQuery, results.length, router])
 
     return {
         query,

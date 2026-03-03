@@ -14,7 +14,7 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 
-export const revalidate = 30
+export const revalidate = 120
 
 interface PageProps {
     params: Promise<{ slug: string }>
@@ -47,7 +47,23 @@ export default async function ProductDetailPage({ params }: PageProps) {
 
     const product = await prisma.product.findUnique({
         where: { slug, isActive: true },
-        include: { category: true },
+        select: {
+            id: true,
+            title: true,
+            slug: true,
+            description: true,
+            price: true,
+            image: true,
+            images: true,
+            shopeeUrl: true,
+            tokopediaUrl: true,
+            badge: true,
+            viewCount: true,
+            shopeeClicks: true,
+            tokopediaClicks: true,
+            categoryId: true,
+            category: { select: { id: true, name: true, slug: true } }
+        }
     })
 
     if (!product) notFound()
@@ -58,7 +74,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
             isActive: true,
             NOT: { id: product.id },
         },
-        include: { category: true },
+        select: {
+            id: true,
+            title: true,
+            slug: true,
+            price: true,
+            image: true,
+            badge: true,
+            category: { select: { name: true, slug: true } }
+        },
         take: 4,
         orderBy: { viewCount: 'desc' },
     })

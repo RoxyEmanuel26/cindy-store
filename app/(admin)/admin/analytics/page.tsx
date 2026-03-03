@@ -1,10 +1,18 @@
 import { prisma } from '@/lib/prisma'
 import { AnalyticsOverviewCards } from '@/components/admin/analytics/AnalyticsOverviewCards'
-import { AnalyticsLineChart } from '@/components/admin/analytics/AnalyticsLineChart'
 import { TopProductsTable } from '@/components/admin/analytics/TopProductsTable'
-import { CategoryStatsChart } from '@/components/admin/analytics/CategoryStatsChart'
 import { ConversionFunnel } from '@/components/admin/analytics/ConversionFunnel'
 import { PeriodSelector } from '@/components/admin/analytics/PeriodSelector'
+import dynamic from 'next/dynamic'
+
+const AnalyticsLineChart = dynamic(
+    () => import('@/components/admin/analytics/AnalyticsLineChart').then(mod => mod.AnalyticsLineChart),
+    { ssr: false, loading: () => <div className="h-[400px] w-full flex items-center justify-center bg-brand-surface dark:bg-dark-surface rounded-2xl animate-pulse"><p className="text-brand-muted">Loading chart...</p></div> }
+)
+const CategoryStatsChart = dynamic(
+    () => import('@/components/admin/analytics/CategoryStatsChart').then(mod => mod.CategoryStatsChart),
+    { ssr: false, loading: () => <div className="h-[300px] w-full flex items-center justify-center bg-brand-surface dark:bg-dark-surface rounded-2xl animate-pulse"><p className="text-brand-muted">Loading chart...</p></div> }
+)
 
 export default async function AnalyticsPage({
     searchParams,
@@ -88,7 +96,7 @@ export default async function AnalyticsPage({
     ])
 
     // Convert BigInt counts from queryRaw to Number so they serialize nicely to client
-    const eventsByDay = eventsByDayRaw.map(r => ({
+    const eventsByDay = eventsByDayRaw.map((r: any) => ({
         ...r,
         count: Number(r.count)
     }))
@@ -134,16 +142,16 @@ export default async function AnalyticsPage({
             {/* Funnel */}
             <ConversionFunnel
                 views={
-                    totalStats.find((s) => s.eventType === 'view')?._count.id || 0
+                    totalStats.find((s: any) => s.eventType === 'view')?._count.id || 0
                 }
                 shopeeClicks={
-                    totalStats.find((s) => s.eventType === 'shopee_click')?._count.id || 0
+                    totalStats.find((s: any) => s.eventType === 'shopee_click')?._count.id || 0
                 }
                 tokopediaClicks={
-                    totalStats.find((s) => s.eventType === 'tokopedia_click')?._count.id || 0
+                    totalStats.find((s: any) => s.eventType === 'tokopedia_click')?._count.id || 0
                 }
                 waClicks={
-                    totalStats.find((s) => s.eventType === 'wa_click')?._count.id || 0
+                    totalStats.find((s: any) => s.eventType === 'wa_click')?._count.id || 0
                 }
             />
         </div>

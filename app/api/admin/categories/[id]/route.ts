@@ -7,6 +7,8 @@ import { parseAndValidate } from '@/lib/api-helpers'
 import { sanitizeText } from '@/lib/sanitize'
 import slugify from 'slugify'
 
+import { revalidateTag } from 'next/cache'
+
 export async function PUT(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -50,6 +52,8 @@ export async function PUT(
         data: { name, slug },
     })
 
+    revalidateTag('categories')
+
     return NextResponse.json(category)
 }
 
@@ -80,6 +84,8 @@ export async function DELETE(
     }
 
     await prisma.category.delete({ where: { id } })
+
+    revalidateTag('categories')
 
     return NextResponse.json({ message: 'Kategori berhasil dihapus' })
 }
