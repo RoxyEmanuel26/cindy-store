@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
@@ -47,6 +47,19 @@ export default function FilterSidebar({
         router.push('/products')
     }
 
+    const [localPrice, setLocalPrice] = useState([
+        currentMinPrice || priceRange.min,
+        currentMaxPrice || priceRange.max
+    ])
+
+    // Sync local state when url params change (e.g. hitting reset)
+    useEffect(() => {
+        setLocalPrice([
+            currentMinPrice || priceRange.min,
+            currentMaxPrice || priceRange.max
+        ])
+    }, [currentMinPrice, currentMaxPrice, priceRange.min, priceRange.max])
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -84,7 +97,8 @@ export default function FilterSidebar({
                     min={priceRange.min}
                     max={priceRange.max}
                     step={5000}
-                    value={[currentMinPrice || priceRange.min, currentMaxPrice || priceRange.max]}
+                    value={localPrice}
+                    onValueChange={setLocalPrice}
                     onValueCommit={(values) => {
                         const params = new URLSearchParams(searchParams.toString())
                         if (values[0] > priceRange.min) params.set('minPrice', String(values[0]))
@@ -97,8 +111,8 @@ export default function FilterSidebar({
                     className="mt-6 mb-2"
                 />
                 <div className="flex justify-between text-xs font-medium text-brand-muted dark:text-dark-muted">
-                    <span>Rp {(currentMinPrice || priceRange.min).toLocaleString('id-ID')}</span>
-                    <span>Rp {(currentMaxPrice || priceRange.max).toLocaleString('id-ID')}</span>
+                    <span>Rp {localPrice[0].toLocaleString('id-ID')}</span>
+                    <span>Rp {localPrice[1].toLocaleString('id-ID')}</span>
                 </div>
             </div>
 
