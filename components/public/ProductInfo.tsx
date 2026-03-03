@@ -32,12 +32,17 @@ export default function ProductInfo({ product }: ProductInfoProps) {
     // Track view + add to recently viewed
     useEffect(() => {
         addProduct(product.id)
+
+        // Track in GA4
         trackProductView(
             product.id,
             product.title,
             product.category?.name || 'Uncategorized',
             product.price
         )
+
+        // Increment database viewCount
+        fetch(`/api/products/${product.id}/view`, { method: 'POST' }).catch(console.error)
     }, [product.id]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleShopeeClick = () => {
